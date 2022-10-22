@@ -47,6 +47,8 @@ import {
 } from 'utils/addressHelpers'
 
 // ABI
+import floorBiddingABI from 'config/abi/FloorBidding.json'
+import walletWinTnieABI from 'config/abi/Wallet.json'
 import profileABI from 'config/abi/pancakeProfile.json'
 import pancakeBunniesAbi from 'config/abi/pancakeBunnies.json'
 import bunnyFactoryAbi from 'config/abi/bunnyFactory.json'
@@ -102,6 +104,8 @@ import crossFarmingProxyAbi from 'config/abi/crossFarmingProxy.json'
 
 // Types
 import type {
+  FloorBidding,
+  Wallet,
   ChainlinkOracle,
   FarmAuction,
   Predictions,
@@ -166,6 +170,14 @@ export const getContract = ({
 }) => {
   const signerOrProvider = signer ?? provider({ chainId })
   return new Contract(address, abi, signerOrProvider)
+}
+
+export const getFloorBiddingContract = (signer?: Signer | Provider) => {
+  return getContract({ abi: floorBiddingABI, address: getFloorBiddingContract(), signer }) as FloorBidding
+}
+
+export const getWinTnieWalletContract = (signer?: Signer | Provider) => {
+  return getContract({ abi: walletWinTnieABI, address: getWinTnieWalletContract(), signer }) as Wallet
 }
 
 export const getBep20Contract = (address: string, signer?: Signer | Provider) => {

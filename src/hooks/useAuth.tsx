@@ -13,9 +13,12 @@ import {
   useDisconnect,
   useNetwork,
 } from 'wagmi'
+import { useSignMessage } from '@pancakeswap/wagmi'
+import { signIn } from 'next-auth/react'
 import { clearUserStates } from '../utils/clearUserStates'
 import { useActiveChainId } from './useActiveChainId'
 import { useSessionChainId } from './useSessionChainId'
+import apiPost from '../../apps/moralis/utils/apiPost'
 
 const useAuth = () => {
   const dispatch = useAppDispatch()
@@ -25,6 +28,7 @@ const useAuth = () => {
   const { chainId } = useActiveChainId()
   const [, setSessionChainId] = useSessionChainId()
   const { t } = useTranslation()
+  const { signMessageAsync } = useSignMessage()
 
   const login = useCallback(
     // eslint-disable-next-line consistent-return
@@ -36,6 +40,16 @@ const useAuth = () => {
           replaceBrowserHistory('chainId', connected.chain.id)
           setSessionChainId(connected.chain.id)
         }
+
+        // winTnie: alternative authenticate for Moralis, experimental
+        console.log('winTnie: Alternative authenticate')
+        const userData = { address: connected.account, chain: connected.chain.id, network: 'evm' }
+        const { message } = await apiPost('/auth/request-message', userData)
+        console.log(message)
+        const signature = await signMessageAsync({ message })
+        await signIn('credentials', { message, signature, redirect: false })
+        // -----------------------------------------------------------
+
         return connected
       } catch (error) {
         window?.localStorage?.removeItem(connectorLocalStorageKey)

@@ -1,0 +1,353 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_wallet",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      }
+    ],
+    "name": "TransferError",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bettor",
+        "type": "address"
+      }
+    ],
+    "name": "AcknowledgeBet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bettor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint32",
+        "name": "number",
+        "type": "uint32"
+      }
+    ],
+    "name": "AnnounceBet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bettor",
+        "type": "address"
+      }
+    ],
+    "name": "AnnounceParticipant",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "winner",
+        "type": "address"
+      }
+    ],
+    "name": "AnnounceWinner",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "bettor",
+        "type": "address"
+      }
+    ],
+    "name": "AnnounceWinnerChange",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      }
+    ],
+    "name": "GameEnd",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      }
+    ],
+    "name": "GameStart",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint16",
+        "name": "gameId",
+        "type": "uint16"
+      }
+    ],
+    "name": "NewGame",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "Received",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint32",
+        "name": "number",
+        "type": "uint32"
+      }
+    ],
+    "name": "bet",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      }
+    ],
+    "name": "endGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      }
+    ],
+    "name": "getGame",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum GameType",
+            "name": "gameType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint16",
+            "name": "gameId",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint24",
+            "name": "duration",
+            "type": "uint24"
+          },
+          {
+            "internalType": "uint256",
+            "name": "price",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startedAt",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "prize",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum FloorBidding.GameStatus",
+            "name": "status",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct FloorBidding.Game",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address payable",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum GameType",
+        "name": "gameType",
+        "type": "uint8"
+      }
+    ],
+    "name": "startGame",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
+]

@@ -9,6 +9,8 @@ import { CAKE } from '@pancakeswap/tokens'
 // Addresses
 import {
   getAddress,
+  getFloorBiddingAddress,
+  getWalletAddress,
   getPancakeProfileAddress,
   getPancakeBunniesAddress,
   getBunnyFactoryAddress,

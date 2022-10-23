@@ -90,7 +90,7 @@ const BidCard = ({gameType}) => {
     const { gameStatus } = useBiddingStatus(gameType);
     const [toasts, setToasts] = useState([]);
     const [bidStatus, setBidStatus] = useState('-');
-    const [, setGameType] = useState('');
+    const [bidType, setBidType] = useState('');
     const [sessionStarted, setSessionStarted] = useState(false)
     const [sessionID, setSessionID] = useState('');
     const [bucketBalance, setBucketBalance] = useState('0');
@@ -195,12 +195,13 @@ const BidCard = ({gameType}) => {
     useEffect(() => {
         if (gameStatus != null) {
             console.log('activate gameStatus')
+            console.log(gameStatus.gameType)
 
-            setGameType(gameStatus.gameType.toString());
+            setBidType(gameStatus.gameType.toString());
             // setBucketBalance(Moralis.Units.FromWei(gameStatus.prize.toString(), 18));
-            let endingTimeStamp = gameStatus.startedAt + gameStatus.duration;
-            console.log(gameStatus.startedAt.toNumber())
-            console.log(endingTimeStamp)
+            // let endingTimeStamp = gameStatus.startedAt + gameStatus.duration;
+            // console.log(gameStatus.startedAt.toNumber())
+            // console.log(endingTimeStamp)
             setSessionID(endingTimeStamp === 86400 ? '-' : gameStatus.gameId);
             // setSessionStarted(endingTimeStamp !== 86400)
             // setSessionEndAt(formatDateTime(endingTimeStamp));

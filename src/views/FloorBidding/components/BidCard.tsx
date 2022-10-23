@@ -18,17 +18,15 @@ import {useTranslation} from '@pancakeswap/localization'
 import {BigNumber} from '@ethersproject/bignumber'
 import {Zero} from '@ethersproject/constants'
 import {parseUnits} from '@ethersproject/units'
-import useCatchTxError from "../../../hooks/useCatchTxError";
-import {useGetTestOwner} from "../hooks/useGetTestOwner";
-import {getFloorBiddingAddress, getWalletAddress} from "../../../utils/addressHelpers";
-import floorBiddingAbi from "../../../config/abi/floorBidding.json";
-import walletAbi from "../../../config/abi/wallet.json";
-import {ToastContainer} from "../../../components/Toast";
 import {sample} from "lodash";
+import useCatchTxError from "../../../hooks/useCatchTxError";
+// import {useGetTestOwner} from "../hooks/useGetTestOwner";
+import {getFloorBiddingAddress, getWalletAddress} from "../../../utils/addressHelpers";
+import floorBiddingAbi from "../../../config/abi/FloorBidding.json";
+import walletAbi from "../../../config/abi/Wallet.json";
+// import {ToastContainer} from "../../../components/Toast";
 import {useBiddingStatus} from "../hooks/useBiddingStatus";
-import {useBidHistory} from "../hooks/useBidHistory";
-import {useMoralis, useMoralisQuery} from "react-moralis";
-import Moralis from "moralis-v1";
+// import {useBidHistory} from "../hooks/useBidHistory";
 
 const Grid = styled.div`
   display: grid;
@@ -88,7 +86,7 @@ interface BidCardProp {
 const BidCard = ({gameType}) => {
     const chainId = 97;
     const {t} = useTranslation();
-    const { refreshHistory, bidHistory } = useBidHistory();
+    // const { refreshHistory, bidHistory } = useBidHistory();
     const { gameStatus } = useBiddingStatus(gameType);
     const [toasts, setToasts] = useState([]);
     const [bidStatus, setBidStatus] = useState('-');
@@ -105,14 +103,14 @@ const BidCard = ({gameType}) => {
     const [isSubmittingBid, setIsSubmittingBid] = useState(false);
     // const showFieldWarning = isAuthenticated && valueAsBn.gt(0) && errorMessage !== null;
     const {loading: isTxPending} = useCatchTxError()
-    const {isContractOwner} = useGetTestOwner();
-    const { isAuthenticated } = useMoralis()
+    // const {isContractOwner} = useGetTestOwner();
 
     const handleInputChange = (input: string) => {
         setBidValue(input)
     }
 
     const handleBidding = async () => {
+        /*
         setIsSubmittingBid(true);
         await Moralis.enableWeb3()
         const options = {
@@ -145,6 +143,7 @@ const BidCard = ({gameType}) => {
         } catch(error) {
             setIsSubmittingBid(false);
         }
+         */
     }
 
     const activateToast = (description = "") => {
@@ -159,20 +158,21 @@ const BidCard = ({gameType}) => {
     }
 
     const handleTransferWallet = async () => {
-        await Moralis.enableWeb3()
-        const options = {
-            contractAddress: getWalletAddress(chainId),
-            functionName: "deposit",
-            abi: walletAbi,
-            chain: "bsc testnet",
-            msgValue: Moralis.Units.ETH("0.1"),
-            params: {
-            }
-        };
-        await Moralis.executeFunction(options);
+        // await Moralis.enableWeb3()
+        // const options = {
+        //     contractAddress: getWalletAddress(chainId),
+        //     functionName: "deposit",
+        //     abi: walletAbi,
+        //     chain: "bsc testnet",
+        //     msgValue: Moralis.Units.ETH("0.1"),
+        //     params: {
+        //     }
+        // };
+        // await Moralis.executeFunction(options);
     }
 
     const handleBalanceWallet = async () => {
+        /*
         await Moralis.enableWeb3()
         const options = {
             contractAddress: getWalletAddress(chainId),
@@ -184,6 +184,8 @@ const BidCard = ({gameType}) => {
         };
         const balance = await Moralis.executeFunction(options)
         console.log(+balance.toString()/1000000000000000000)
+
+         */
     }
 
     const handleRemove = (id: string) => {
@@ -192,12 +194,16 @@ const BidCard = ({gameType}) => {
 
     useEffect(() => {
         if (gameStatus != null) {
+            console.log('activate gameStatus')
+
             setGameType(gameStatus.gameType.toString());
-            setBucketBalance(Moralis.Units.FromWei(gameStatus.prize.toString(), 18));
-            let endingTimeStamp = gameStatus.startedAt.toNumber() + gameStatus.duration;
-            setSessionID(endingTimeStamp === 86400 ? '-' : gameStatus.gameId.toString());
-            setSessionStarted(endingTimeStamp !== 86400)
-            setSessionEndAt(formatDateTime(endingTimeStamp));
+            // setBucketBalance(Moralis.Units.FromWei(gameStatus.prize.toString(), 18));
+            let endingTimeStamp = gameStatus.startedAt + gameStatus.duration;
+            console.log(gameStatus.startedAt.toNumber())
+            console.log(endingTimeStamp)
+            setSessionID(endingTimeStamp === 86400 ? '-' : gameStatus.gameId);
+            // setSessionStarted(endingTimeStamp !== 86400)
+            // setSessionEndAt(formatDateTime(endingTimeStamp));
         }
     }, [gameStatus])
 
@@ -210,34 +216,34 @@ const BidCard = ({gameType}) => {
         return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() ;
     }
 
-    const { fetch } = useMoralisQuery(
-        "FloorBiddingAnnounceBet",
-        (query) => query.equalTo(
-            "bettor",
-            "0x6207be8a813e9ecdff6f388b99a8108edf8b9cee"
-        ).equalTo("gameType", "0").equalTo("gameId", "3"),
-        [],
-        { autoFetch: false }
-    )
+    // const { fetch } = useMoralisQuery(
+    //     "FloorBiddingAnnounceBet",
+    //     (query) => query.equalTo(
+    //         "bettor",
+    //         "0x6207be8a813e9ecdff6f388b99a8108edf8b9cee"
+    //     ).equalTo("gameType", "0").equalTo("gameId", "3"),
+    //     [],
+    //     { autoFetch: false }
+    // )
 
-    const getGameTitle = (gameType: string) => {
-        switch (gameType) {
+    const getGameTitle = (bidType: string) => {
+        switch (bidType) {
             case '0':
-                return 'Game type 0, 0.0094 BNB per bit'
+                return `Game Type ${bidType}, 0.0094 BNB per bid`
         }
     }
 
     const handleRefresh = () => {
         // refreshHistory();
-        const basicQuery = async () => {
-            const results = await fetch();
-            alert("Successfully retrieved " + results.length );
-            for (let i = 0; i < results.length; i++) {
-                const object = results[i];
-                console.log(object.id + " - " + object.get("createdAt"));
-            }
-        };
-        basicQuery();
+        // const basicQuery = async () => {
+        //     const results = await fetch();
+        //     alert("Successfully retrieved " + results.length );
+        //     for (let i = 0; i < results.length; i++) {
+        //         const object = results[i];
+        //         console.log(object.id + " - " + object.get("createdAt"));
+        //     }
+        // };
+        // basicQuery();
     }
 
     return (
@@ -295,7 +301,7 @@ const BidCard = ({gameType}) => {
                     <Flex flexDirection="column" mb="18px">
                         <BalanceInput
                             value={bidValue}
-                            placeholder={'0'}
+                            // placeholder={'0'}
                             onUserInput={handleInputChange}
                             // isWarning={showFieldWarning}
                             // inputProps={{disabled: !isAuthenticated || isTxPending}}
@@ -306,7 +312,7 @@ const BidCard = ({gameType}) => {
                 <Box mb="8px">
                     <Button
                         width="100%"
-                        disabled={isContractOwner || !isAuthenticated}
+                        // disabled={isContractOwner || !isAuthenticated}
                         // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
                         onClick={handleBidding}
                         // isLoading={isTxPending}
@@ -319,7 +325,7 @@ const BidCard = ({gameType}) => {
                 <Box mb="8px">
                     <Button
                         width="100%"
-                        disabled={isContractOwner || !isAuthenticated}
+                        // disabled={isContractOwner || !isAuthenticated}
                         // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
                         onClick={handleTransferWallet}
                         // isLoading={isTxPending}
@@ -332,7 +338,7 @@ const BidCard = ({gameType}) => {
                 <Box mb="8px">
                     <Button
                         width="100%"
-                        disabled={isContractOwner || !isAuthenticated}
+                        // disabled={isContractOwner || !isAuthenticated}
                         // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
                         onClick={handleBalanceWallet}
                         // isLoading={isTxPending}
@@ -345,7 +351,7 @@ const BidCard = ({gameType}) => {
                 <Box mb="8px">
                     <Button
                         width="100%"
-                        disabled={isContractOwner || !isAuthenticated}
+                        // disabled={isContractOwner || !isAuthenticated}
                         // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
                         onClick={handleRefresh}
                         // isLoading={isTxPending}
@@ -365,7 +371,7 @@ const BidCard = ({gameType}) => {
                     </ExpandableLabel>
                 </Flex>
             </CardFooter>
-            <ToastContainer toasts={toasts} onRemove={handleRemove} />
+            {/*<ToastContainer toasts={toasts} onRemove={handleRemove} />*/}
         </StyledCard>
     )
 }

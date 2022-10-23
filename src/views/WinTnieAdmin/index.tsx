@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {Flex, Heading} from "@pancakeswap/uikit";
 import {PageMeta} from "../../components/Layout/Page";
 import PageSection from "../../components/PageSection";
-import {CHECK_PRIZES_BG, FINISHED_ROUNDS_BG, GET_TICKETS_BG} from "../Lottery/pageSectionStyles";
+import {GET_TICKETS_BG, OMG_BG, PREDICT_BG} from "../Lottery/pageSectionStyles";
 import BidAdminCard from "./components/BidAdminCard";
 
 const WinTnieAdminPage = styled.div`
@@ -33,9 +33,9 @@ const WinTnieAdmin = () => {
 
                 <PageSection
                     containerProps={{ style: { marginTop: '-30px' } }}
-                    background={FINISHED_ROUNDS_BG}
+                    background={OMG_BG}
                     concaveDivider
-                    clipFill={{ light: '#9A9FD0' }}
+                    clipFill={{ light: '#e98b8d' }}
                     dividerPosition="top"
                     index={2}
                 >
@@ -48,14 +48,14 @@ const WinTnieAdmin = () => {
 
                 <PageSection
                     containerProps={{ style: { marginTop: '-30px' } }}
-                    background={CHECK_PRIZES_BG}
+                    background={PREDICT_BG}
                     concaveDivider
-                    clipFill={{ light: '#3D2A54' }}
+                    clipFill={{ light: '#6790ed' }}
                     dividerPosition="top"
                     index={2}
                 >
                     <Flex alignItems="center" justifyContent="center" flexDirection="column" pt="24px">
-                        <Heading scale="xl" color="#ffffff" mb="24px" textAlign="center">
+                        <Heading scale="xl" color="#000000" mb="24px" textAlign="center">
                             {'Prediction'}
                         </Heading>
                     </Flex>

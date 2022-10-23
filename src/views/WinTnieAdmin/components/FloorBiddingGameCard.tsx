@@ -1,58 +1,49 @@
-import {useEffect, useState} from "react";
-import {Box, Button, CardHeader, Flex, Heading, Text} from "@pancakeswap/uikit";
-import {useTranslation} from "@pancakeswap/localization";
-// import {useGetTestOwner} from "../../FloorBidding/hooks/useGetTestOwner";
-// import {useBiddingStatus} from "../../FloorBidding/hooks/useBiddingStatus";
-// import {getFloorBiddingAddress} from "../../../utils/addressHelpers";
-// import floorBiddingAbi from "../../../config/abi/floorBidding.json";
-// import {BigNumber} from "ethers";
+import {useEffect, useState} from 'react';
+import {Box, Button, CardHeader, Flex, Heading, Text} from '@pancakeswap/uikit';
+import {useTranslation} from '@pancakeswap/localization';
+import {BigNumber, ethers} from 'ethers';
+import {getFloorBiddingAddress} from '../../../utils/addressHelpers';
+import floorBiddingAbi from '../../../config/abi/FloorBidding.json'
+import {useBiddingStatus} from "../../FloorBidding/hooks/useBiddingStatus";
+
+// import {useGetTestOwner} from '../../FloorBidding/hooks/useGetTestOwner';
+// import {useBiddingStatus} from '../../FloorBidding/hooks/useBiddingStatus';
+// import {getFloorBiddingAddress} from '../../../utils/addressHelpers';
+// import floorBiddingAbi from '../../../config/abi/floorBidding.json';
+// import {BigNumber} from 'ethers';
 
 const FloorBiddingGameCard = () => {
-    const chainId = 97;
     const {t} = useTranslation();
     // const {isContractOwner} = useGetTestOwner();
     const [isStartingGame, setIsStartingGame] = useState(false);
     const [isEndingGame, setIsEndingGame] = useState(false);
-    // const {gameStatus} = useBiddingStatus("0");
+    const {gameStatus} = useBiddingStatus('0');
 
-    const handleStartGame = async () => {
-        /*
-        setIsStartingGame(true);
-        await Moralis.enableWeb3()
-        const options = {
-            contractAddress: getFloorBiddingAddress(chainId),
-            functionName: "startGame",
-            abi: floorBiddingAbi,
-            chain: "bsc testnet",
-            params: {
-                gameType: BigNumber.from("0"),
+    const gameAdminAction = async (isStartGame: boolean) => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+        const [accounts, chainId] = await Promise.all([
+            provider.send('eth_requestAccounts', []),
+            provider.send('eth_chainId', []),
+        ]);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(getFloorBiddingAddress(Number(chainId)), floorBiddingAbi, signer);
+        try {
+            if (isStartGame) {
+                await contract.functions.startGame(0)
+            } else {
+                await contract.functions.endGame(0)
             }
-        };
-        let result = await Moralis.executeFunction(options);
-        let res = result.wait(1);
-        console.log(res);
-        setIsStartingGame(false);
-         */
+        } catch (err) {
+            console.log(err)
+        }
     }
 
-    const handleEndGame = async () => {
-        /*
-        setIsEndingGame(true);
-        await Moralis.enableWeb3()
-        const options = {
-            contractAddress: getFloorBiddingAddress(chainId),
-            functionName: "endGame",
-            abi: floorBiddingAbi,
-            chain: "bsc testnet",
-            params: {
-                gameType: BigNumber.from("0"),
-            }
-        };
-        let result = await Moralis.executeFunction(options);
-        let res = result.wait(1);
-        console.log(res);
-        setIsEndingGame(false);
-         */
+    const handleStartGame = () => {
+        gameAdminAction(true)
+    }
+
+    const handleEndGame = () => {
+        gameAdminAction(false)
     }
 
     return (
@@ -70,14 +61,14 @@ const FloorBiddingGameCard = () => {
                         // disabled={!isContractOwner || isStartingGame}
                         onClick={handleStartGame}
                     >
-                        {"Start Game"}
+                        {t('Start Game')}
                     </Button>
                     <Button
                         width="49%"
                         // disabled={!isContractOwner || isEndingGame}
                         onClick={handleEndGame}
                     >
-                        {"End Game"}
+                        {t('End Game')}
                     </Button>
                 </Flex>
             </Box>

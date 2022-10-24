@@ -19,6 +19,8 @@ import {BigNumber} from '@ethersproject/bignumber'
 import {Zero} from '@ethersproject/constants'
 import {parseUnits} from '@ethersproject/units'
 import {sample} from "lodash";
+import {ToastContainer} from "@pancakeswap/uikit/src/components/Toast";
+import {ethers} from "ethers";
 import useCatchTxError from "../../../hooks/useCatchTxError";
 // import {useGetTestOwner} from "../hooks/useGetTestOwner";
 import {getFloorBiddingAddress, getWalletAddress} from "../../../utils/addressHelpers";
@@ -84,7 +86,6 @@ interface BidCardProp {
 }
 
 const BidCard = ({gameType}) => {
-    const chainId = 97;
     const {t} = useTranslation();
     // const { refreshHistory, bidHistory } = useBidHistory();
     const { gameStatus } = useBiddingStatus(gameType);
@@ -158,34 +159,33 @@ const BidCard = ({gameType}) => {
     }
 
     const handleTransferWallet = async () => {
-        // await Moralis.enableWeb3()
-        // const options = {
-        //     contractAddress: getWalletAddress(chainId),
-        //     functionName: "deposit",
-        //     abi: walletAbi,
-        //     chain: "bsc testnet",
-        //     msgValue: Moralis.Units.ETH("0.1"),
-        //     params: {
-        //     }
-        // };
-        // await Moralis.executeFunction(options);
+        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+        const [chainId] = await Promise.all([
+            provider.send('eth_chainId', []),
+        ]);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(getWalletAddress(Number(chainId)), walletAbi, signer);
+        try {
+            const eth = 0.5 * 1000000000000000000
+            await contract.functions.deposit({value: BigNumber.from(eth.toString())})
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     const handleBalanceWallet = async () => {
-        /*
-        await Moralis.enableWeb3()
-        const options = {
-            contractAddress: getWalletAddress(chainId),
-            functionName: "accountBalance",
-            abi: walletAbi,
-            chain: "bsc testnet",
-            params: {
-            }
-        };
-        const balance = await Moralis.executeFunction(options)
-        console.log(+balance.toString()/1000000000000000000)
-
-         */
+        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+        const [chainId] = await Promise.all([
+            provider.send('eth_chainId', []),
+        ]);
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(getWalletAddress(Number(chainId)), walletAbi, signer);
+        try {
+            const result = await contract.functions.balance()
+            console.log(ethers.utils.formatEther(result.toString()))
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     const handleRemove = (id: string) => {
@@ -193,18 +193,25 @@ const BidCard = ({gameType}) => {
     }
 
     useEffect(() => {
+        // console.log(gameStatus)
         if (gameStatus != null) {
-            console.log('activate gameStatus')
-            console.log(gameStatus.gameType)
-
             setBidType(gameStatus.gameType.toString());
-            // setBucketBalance(Moralis.Units.FromWei(gameStatus.prize.toString(), 18));
-            // let endingTimeStamp = gameStatus.startedAt + gameStatus.duration;
-            // console.log(gameStatus.startedAt.toNumber())
-            // console.log(endingTimeStamp)
-            setSessionID(endingTimeStamp === 86400 ? '-' : gameStatus.gameId);
-            // setSessionStarted(endingTimeStamp !== 86400)
-            // setSessionEndAt(formatDateTime(endingTimeStamp));
+            setBucketBalance(ethers.utils.formatEther(gameStatus.prize.toString()));
+            if ((gameStatus.duration !== undefined) &&
+              (gameStatus.duration > 0) &&
+              (gameStatus.startedAt.toNumber() > 86400)) {
+                const endingTimeStamp = gameStatus.startedAt.toNumber() + gameStatus.duration;
+                if (checkSessionEnd(endingTimeStamp)) {
+                    setSessionEndAt('-')
+                    setSessionID('-')
+                } else {
+                    setSessionEndAt(formatDateTime(endingTimeStamp))
+                    setSessionID(gameStatus.gameId.toString());
+                }
+            } else {
+                setSessionEndAt('-')
+                setSessionID('-')
+            }
         }
     }, [gameStatus])
 
@@ -214,37 +221,27 @@ const BidCard = ({gameType}) => {
         }
         const d = new Date(timestamp * 1000);
         const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-        return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() ;
+        return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
     }
 
-    // const { fetch } = useMoralisQuery(
-    //     "FloorBiddingAnnounceBet",
-    //     (query) => query.equalTo(
-    //         "bettor",
-    //         "0x6207be8a813e9ecdff6f388b99a8108edf8b9cee"
-    //     ).equalTo("gameType", "0").equalTo("gameId", "3"),
-    //     [],
-    //     { autoFetch: false }
-    // )
+    const checkSessionEnd = (timestamp: number) => {
+        if (timestamp === 86400) {
+            return true
+        }
+        const d = new Date(timestamp * 1000)
+        if (d.getTime() < Date.now()/1000) {
+            return true
+        }
+        return false
+    }
 
-    const getGameTitle = (bidType: string) => {
+    const getGameTitle = () => {
         switch (bidType) {
             case '0':
                 return `Game Type ${bidType}, 0.0094 BNB per bid`
+            default:
+                return ''
         }
-    }
-
-    const handleRefresh = () => {
-        // refreshHistory();
-        // const basicQuery = async () => {
-        //     const results = await fetch();
-        //     alert("Successfully retrieved " + results.length );
-        //     for (let i = 0; i < results.length; i++) {
-        //         const object = results[i];
-        //         console.log(object.id + " - " + object.get("createdAt"));
-        //     }
-        // };
-        // basicQuery();
     }
 
     return (
@@ -310,7 +307,7 @@ const BidCard = ({gameType}) => {
                         />
                     </Flex>
                 </Grid>
-                <Box mb="8px">
+                <Box mb="32px">
                     <Button
                         width="100%"
                         // disabled={isContractOwner || !isAuthenticated}
@@ -320,7 +317,7 @@ const BidCard = ({gameType}) => {
                         isLoading={isSubmittingBid}
                         // endIcon={isTxPending ? <AutoRenewIcon color="currentColor" spin /> : null}
                     >
-                        {t('Submit Your Bid')}
+                        {t('Bid your unique and lowest value')}
                     </Button>
                 </Box>
                 <Box mb="8px">
@@ -349,20 +346,6 @@ const BidCard = ({gameType}) => {
                         {t('balance wallet')}
                     </Button>
                 </Box>
-                <Box mb="8px">
-                    <Button
-                        width="100%"
-                        // disabled={isContractOwner || !isAuthenticated}
-                        // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
-                        onClick={handleRefresh}
-                        // isLoading={isTxPending}
-                        isLoading={isSubmittingBid}
-                        // endIcon={isTxPending ? <AutoRenewIcon color="currentColor" spin /> : null}
-                    >
-                        {t('refresh')}
-                    </Button>
-
-                </Box>
             </CardBody>
             <CardFooter p="0">
                 {isExpanded && <PreviousWrapper>Hello World!!!<br/>World of WarCraft</PreviousWrapper>}
@@ -372,7 +355,7 @@ const BidCard = ({gameType}) => {
                     </ExpandableLabel>
                 </Flex>
             </CardFooter>
-            {/*<ToastContainer toasts={toasts} onRemove={handleRemove} />*/}
+            <ToastContainer toasts={toasts} onRemove={handleRemove} />
         </StyledCard>
     )
 }

@@ -38,10 +38,10 @@ export const useBiddingStatus = (gameType: string) => {
         // @ts-ignore
         setGameStatus({
           gameType: result[0].gameType,
-          gameId: result[0].gmaeId,
-          duration: result[0].gmaeId,
-          price: BigNumber.from(result[0].price),
-          startedAt: BigNumber.from(result[0].startedAt),
+          gameId: result[0].gameId,
+          duration: result[0].duration,
+          price: BigNumber.from(result[0].price.toString()),
+          startedAt: BigNumber.from(result[0].startedAt.toString()),
           prize: BigNumber.from(result[0].prize),
           status: result[0].status,
           length: 7,
@@ -64,5 +64,5 @@ export const useBiddingStatus = (gameType: string) => {
   }, [refreshStatus, activateTimer])
 
 
-  return { gameStatus}
+  return { gameStatus }
 }

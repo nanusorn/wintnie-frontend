@@ -8,6 +8,7 @@ import {GameStructOutput} from "../../../config/abi/types/FloorBidding";
 export const useBiddingStatus = (gameType: string) => {
   const [activateTimer, setActivateTimer] = useState(true)
   const [refreshStatus, setRefreshStatus] = useState(true);
+  // @ts-ignore
   const [gameStatus, setGameStatus] = useState<GameStructOutput | null>({
     gameType: 0,
     gameId: 0,

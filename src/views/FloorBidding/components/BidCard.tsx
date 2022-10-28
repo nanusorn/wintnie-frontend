@@ -12,23 +12,18 @@ import {
     CardFooter,
     alertVariants,
     BalanceInput,
-    ExpandableLabel, BoxProps,
+    ExpandableLabel,
 } from '@pancakeswap/uikit'
 import {useTranslation} from '@pancakeswap/localization'
 import {BigNumber} from '@ethersproject/bignumber'
 import {Zero} from '@ethersproject/constants'
 import {parseUnits} from '@ethersproject/units'
+// eslint-disable-next-line lodash/import-scope
 import {sample} from "lodash";
 import {ToastContainer} from "@pancakeswap/uikit/src/components/Toast";
 import {ethers} from "ethers";
 import useCatchTxError from "../../../hooks/useCatchTxError";
-// import {useGetTestOwner} from "../hooks/useGetTestOwner";
-import {getFloorBiddingAddress, getWalletAddress} from "../../../utils/addressHelpers";
-import floorBiddingAbi from "../../../config/abi/FloorBidding.json";
-import walletAbi from "../../../config/abi/Wallet.json";
-// import {ToastContainer} from "../../../components/Toast";
 import {useBiddingStatus} from "../hooks/useBiddingStatus";
-// import {useBidHistory} from "../hooks/useBidHistory";
 
 const Grid = styled.div`
   display: grid;
@@ -81,17 +76,17 @@ const getButtonProps = (value: BigNumber, bnbBalance: BigNumber, minBetAmountBal
     return {key: 'Confirm', disabled: value.lt(minBetAmountBalance)}
 }
 
-interface BidCardProp {
+interface BidCardProps {
     gameType: string
 }
 
-const BidCard = ({gameType}) => {
-    const {t} = useTranslation();
-    // const { refreshHistory, bidHistory } = useBidHistory();
+
+const BidCard: React.FC<React.PropsWithChildren<BidCardProps>> = ({gameType: string}) => {
+    const {t} = useTranslation()
     const { gameStatus } = useBiddingStatus(gameType);
     const [toasts, setToasts] = useState([]);
     const [bidStatus, setBidStatus] = useState('-');
-    const [bidType, setBidType] = useState('');
+    const [bidType, setBidType] = useState(gameType);
     const [sessionStarted, setSessionStarted] = useState(false)
     const [sessionID, setSessionID] = useState('');
     const [bucketBalance, setBucketBalance] = useState('0');
@@ -102,9 +97,7 @@ const BidCard = ({gameType}) => {
     const {key, disabled} = getButtonProps(valueAsBn, Zero, BigNumber.from(0));
     const [isExpanded, setIsExpanded] = useState(false);
     const [isSubmittingBid, setIsSubmittingBid] = useState(false);
-    // const showFieldWarning = isAuthenticated && valueAsBn.gt(0) && errorMessage !== null;
     const {loading: isTxPending} = useCatchTxError()
-    // const {isContractOwner} = useGetTestOwner();
 
     const handleInputChange = (input: string) => {
         setBidValue(input)
@@ -158,36 +151,6 @@ const BidCard = ({gameType}) => {
         setToasts((prevToasts) => [randomToast, ...prevToasts]);
     }
 
-    const handleTransferWallet = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-        const [chainId] = await Promise.all([
-            provider.send('eth_chainId', []),
-        ]);
-        const signer = provider.getSigner()
-        const contract = new ethers.Contract(getWalletAddress(Number(chainId)), walletAbi, signer);
-        try {
-            const eth = 0.5 * 1000000000000000000
-            await contract.functions.deposit({value: BigNumber.from(eth.toString())})
-        } catch(err) {
-            console.log(err)
-        }
-    }
-
-    const handleBalanceWallet = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-        const [chainId] = await Promise.all([
-            provider.send('eth_chainId', []),
-        ]);
-        const signer = provider.getSigner()
-        const contract = new ethers.Contract(getWalletAddress(Number(chainId)), walletAbi, signer);
-        try {
-            const result = await contract.functions.balance()
-            console.log(ethers.utils.formatEther(result.toString()))
-        } catch(err) {
-            console.log(err)
-        }
-    }
-
     const handleRemove = (id: string) => {
         setToasts((prevToasts) => prevToasts.filter((prevToast) => prevToast.id !== id));
     }
@@ -204,13 +167,16 @@ const BidCard = ({gameType}) => {
                 if (checkSessionEnd(endingTimeStamp)) {
                     setSessionEndAt('-')
                     setSessionID('-')
+                    setSessionStarted(false)
                 } else {
                     setSessionEndAt(formatDateTime(endingTimeStamp))
                     setSessionID(gameStatus.gameId.toString());
+                    setSessionStarted(true)
                 }
             } else {
                 setSessionEndAt('-')
                 setSessionID('-')
+                setSessionStarted(false)
             }
         }
     }, [gameStatus])
@@ -238,7 +204,17 @@ const BidCard = ({gameType}) => {
     const getGameTitle = () => {
         switch (bidType) {
             case '0':
-                return `Game Type ${bidType}, 0.0094 BNB per bid`
+                return t(`Game Type ${bidType}, 0.0094 BNB per bid`)
+            case '1':
+                return t(`Game Type ${bidType}, 0.019 BNB per bid`)
+            case '2':
+                return t(`Game Type ${bidType}, 0.028 BNB per bid`)
+            case '3':
+                return t(`Game Type ${bidType}, 0.038 BNB per bid`)
+            case '4':
+                return t(`Game Type ${bidType}, 0.047 BNB per bid`)
+            case '5':
+                return t(`Game Type ${bidType}, 0.057 BNB per bid`)
             default:
                 return ''
         }
@@ -249,12 +225,11 @@ const BidCard = ({gameType}) => {
             <CardHeader p="16px 24px">
                 <Flex justifyContent="space-between">
                     <Heading mr="12px">{t('Floor Bidding')}</Heading>
-                    <Text>{getGameTitle(gameType)}</Text>
+                    <Text>{getGameTitle()}</Text>
                 </Flex>
             </CardHeader>
             <CardBody>
                 <Grid>
-
                     <Flex justifyContent={['left', null, null, 'flex-start']}>
                         <Text textAlign="left" color="textSubtle">
                             {t('Session ID')}
@@ -307,7 +282,7 @@ const BidCard = ({gameType}) => {
                         />
                     </Flex>
                 </Grid>
-                <Box mb="32px">
+                <Box mb="8px">
                     <Button
                         width="100%"
                         // disabled={isContractOwner || !isAuthenticated}
@@ -320,32 +295,7 @@ const BidCard = ({gameType}) => {
                         {t('Bid your unique and lowest value')}
                     </Button>
                 </Box>
-                <Box mb="8px">
-                    <Button
-                        width="100%"
-                        // disabled={isContractOwner || !isAuthenticated}
-                        // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
-                        onClick={handleTransferWallet}
-                        // isLoading={isTxPending}
-                        isLoading={isSubmittingBid}
-                        // endIcon={isTxPending ? <AutoRenewIcon color="currentColor" spin /> : null}
-                    >
-                        {t('transfer wallet')}
-                    </Button>
-                </Box>
-                <Box mb="8px">
-                    <Button
-                        width="100%"
-                        // disabled={isContractOwner || !isAuthenticated}
-                        // className={!isAuthenticated ? '' : 'swiper-no-swiping'}
-                        onClick={handleBalanceWallet}
-                        // isLoading={isTxPending}
-                        isLoading={isSubmittingBid}
-                        // endIcon={isTxPending ? <AutoRenewIcon color="currentColor" spin /> : null}
-                    >
-                        {t('balance wallet')}
-                    </Button>
-                </Box>
+
             </CardBody>
             <CardFooter p="0">
                 {isExpanded && <PreviousWrapper>Hello World!!!<br/>World of WarCraft</PreviousWrapper>}

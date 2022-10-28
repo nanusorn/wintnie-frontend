@@ -1,12 +1,13 @@
-import { Flex, Heading } from '@pancakeswap/uikit'
+import { Flex, Heading, Box } from '@pancakeswap/uikit'
 import styled from 'styled-components'
+import { useTranslation } from '@pancakeswap/localization'
 import { PageMeta } from '../../components/Layout/Page'
 import PageSection from '../../components/PageSection'
 import { GET_TICKETS_BG, TITLE_BG } from '../Lottery/pageSectionStyles'
 import Hero from './components/Hero'
-import { useTranslation } from '@pancakeswap/localization'
 import BidCard from './components/BidCard'
 import HowToPlay from "./components/HowtoPlay";
+import TransferCard from "../Wallet/components/TransferCard";
 
 const FloorBiddingPage = styled.div`
   min-height: calc(100vh - 64px);
@@ -45,18 +46,16 @@ const FloorBidding = () => {
           </Heading>
           <Flex alignItems="center" justifyContent="center" flexDirection="column" pt="24px">
             <Heading scale="lg" color="#ffffff" mb="24px" textAlign="center">
-              {t('Game type '+gameType)}
+              {t('Game type ')+gameType}
             </Heading>
-            <BidCard gameType={gameType}/>
+            <Box mb="8px">
+              <BidCard gameType={gameType}/>
+            </Box>
+            <Box mb="8px">
+              <TransferCard/>
+            </Box>
           </Flex>
-          {/*<Flex alignItems="center" justifyContent="center" flexDirection="column" pt="24px">*/}
-          {/*  <Heading scale="lg" color="#ffffff" mb="24px" textAlign="center">*/}
-          {/*    {t('Game type 1')}*/}
-          {/*  </Heading>*/}
-          {/*  <BidCard gameType={'1'}/>*/}
-          {/*</Flex>*/}
         </PageSection>
-        {/*<PageSection background={TITLE_BG} index={1} hasCurvedDivider={false}>*/}
         <PageSection
           containerProps={{ style: { marginTop: '-30px' } }}
           background={TITLE_BG}

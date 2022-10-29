@@ -81,7 +81,7 @@ interface BidCardProps {
 }
 
 
-const BidCard: React.FC<React.PropsWithChildren<BidCardProps>> = ({gameType: string}) => {
+const BidCard = (gameType: string) => {
     const {t} = useTranslation()
     const { gameStatus } = useBiddingStatus(gameType);
     const [toasts, setToasts] = useState([]);

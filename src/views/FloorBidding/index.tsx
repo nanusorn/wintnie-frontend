@@ -6,8 +6,8 @@ import PageSection from '../../components/PageSection'
 import { GET_TICKETS_BG, TITLE_BG } from '../Lottery/pageSectionStyles'
 import Hero from './components/Hero'
 import BidCard from './components/BidCard'
-import HowToPlay from "./components/HowtoPlay";
-import TransferCard from "../Wallet/components/TransferCard";
+import HowToPlay from './components/HowtoPlay'
+import TransferCard from '../Wallet/components/TransferCard'
 
 const FloorBiddingPage = styled.div`
   min-height: calc(100vh - 64px);
@@ -46,13 +46,13 @@ const FloorBidding = () => {
           </Heading>
           <Flex alignItems="center" justifyContent="center" flexDirection="column" pt="24px">
             <Heading scale="lg" color="#ffffff" mb="24px" textAlign="center">
-              {t('Game type ')+gameType}
+              {t('Game type ') + gameType}
             </Heading>
             <Box mb="8px">
-              <BidCard gameType={gameType}/>
+              <BidCard gameType="0" />
             </Box>
             <Box mb="8px">
-              <TransferCard/>
+              <TransferCard />
             </Box>
           </Flex>
         </PageSection>
@@ -62,8 +62,9 @@ const FloorBidding = () => {
           concaveDivider
           clipFill={{ light: '#7645D9' }}
           dividerPosition="top"
-          index={2}>
-          <HowToPlay/>
+          index={2}
+        >
+          <HowToPlay />
         </PageSection>
       </FloorBiddingPage>
     </>

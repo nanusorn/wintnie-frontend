@@ -13,10 +13,6 @@ export const getFloorBiddingAddress = (chainId?: number) => {
 export const getWalletAddress = (chainId?: number) => {
   return getAddress(addresses.wallet, chainId)
 }
-export const getLottoV2Address = () => {
-  return getAddress(addresses.lottoV2)
-}
-
 
 export const getMasterChefAddress = (chainId?: number) => {
   return getAddress(addresses.masterChef, chainId)

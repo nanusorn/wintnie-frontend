@@ -608,83 +608,6 @@ export interface UserRound {
   tickets?: LotteryTicket[]
 }
 
-
-//----------------------------
-export interface LottoRoundUserTickets {
-  isLoading?: boolean
-  tickets?: LottoTicket[]
-}
-
-interface LottoRoundGenerics {
-  isLoading?: boolean
-  LottoId: string
-  status: LottoStatus
-  startTime: string
-  endTime: string
-  treasuryFee: string
-  firstTicketId: string
-  lastTicketId: string
-  finalNumber: number
-}
-
-export interface LottoRound extends LottoRoundGenerics {
-  userTickets?: LottoRoundUserTickets
-  priceTicketInCake: BigNumber
-  discountDivisor: BigNumber
-  amountCollectedInCake: BigNumber
-  cakePerBracket: string[]
-  countWinnersPerBracket: string[]
-  rewardsBreakdown: string[]
-}
-
-export interface LottoResponse extends LottoRoundGenerics {
-  priceTicketInCake: SerializedBigNumber
-  discountDivisor: SerializedBigNumber
-  amountCollectedInCake: SerializedBigNumber
-  cakePerBracket: SerializedBigNumber[]
-  countWinnersPerBracket: SerializedBigNumber[]
-  rewardsBreakdown: SerializedBigNumber[]
-}
-
-export interface LottoState {
-  currentLottoId: string
-  maxNumberTicketsPerBuyOrClaim: string
-  isTransitioning: boolean
-  currentRound: LottoResponse & { userTickets?: LottoRoundUserTickets }
-  lotteriesData?: LottoRoundGraphEntity[]
-  userLottoData?: LottoUserGraphEntity
-}
-
-export interface LottoRoundGraphEntity {
-  id: string
-  totalUsers: string
-  totalTickets: string
-  winningTickets: string
-  status: LottoStatus
-  finalNumber: string
-  startTime: string
-  endTime: string
-  ticketPrice: SerializedBigNumber
-}
-
-export interface LottoUserGraphEntity {
-  account: string
-  totalCake: string
-  totalTickets: string
-  rounds: UserRound[]
-}
-
-export interface UserRound {
-  claimed: boolean
-  LottoId: string
-  status: LottoStatus
-  endTime: string
-  totalTickets: string
-  tickets?: LottoTicket[]
-}
-//----------------------------
-
-
 export interface PredictionConfig {
   address: string
   api: string
@@ -786,6 +709,5 @@ export interface State {
   pools: PoolsState
   predictions: PredictionsState
   lottery: LotteryState
-  lotto: LottoState
   pottery: PotteryState
 }

@@ -9,6 +9,10 @@ export default {
     97: '0x0419aDbaA37144B95cB68718b3686714Ef3936ad',
     56: '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
   },
+  wintnieLottery: {
+    97: '0x6056404324b64C078cb9AD961892140fCC5ae920',
+    56: '0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF',
+  },
   masterChef: {
     97: '0xB4A466911556e39210a6bB2FaECBB59E4eB7E43d',
     56: '0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652',
@@ -20,10 +24,6 @@ export default {
   sousChef: {
     97: '0xd3af5fe61dbaf8f73149bfcfa9fb653ff096029a',
     56: '0x6ab8463a4185b80905e05a9ff80a2d6b714b9e95',
-  },
-  lotteryV2: {
-    97: '0x5790c3534F30437641541a0FA04C992799602998',
-    56: '0x5aF6D33DE2ccEC94efb1bDF8f92Bd58085432d2c',
   },
   multiCall: multicallAddresses,
   pancakeProfile: {

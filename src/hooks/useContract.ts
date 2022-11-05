@@ -39,7 +39,7 @@ import {
   getIfoV1Contract,
   getIfoV2Contract,
   getIfoV3Contract,
-  getLotteryV2Contract,
+  getWinTnieLotteryContract,
   getMasterchefContract,
   getMasterchefV1Contract,
   getNftMarketContract,
@@ -136,7 +136,7 @@ export const useProfileContract = (withSignerIfPossible = true) => {
 
 export const useLotteryV2Contract = () => {
   const providerOrSigner = useProviderOrSigner()
-  return useMemo(() => getLotteryV2Contract(providerOrSigner), [providerOrSigner])
+  return useMemo(() => getWinTnieLotteryContract(providerOrSigner), [providerOrSigner])
 }
 
 export const useMasterchef = (withSignerIfPossible = true) => {

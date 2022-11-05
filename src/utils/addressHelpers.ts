@@ -23,8 +23,8 @@ export const getMasterChefV1Address = () => {
 export const getMulticallAddress = (chainId?: number) => {
   return getAddress(addresses.multiCall, chainId)
 }
-export const getLotteryV2Address = () => {
-  return getAddress(addresses.lotteryV2)
+export const getWinTnieLotteryAddress = () => {
+  return getAddress(addresses.wintnieLottery)
 }
 export const getPancakeProfileAddress = () => {
   return getAddress(addresses.pancakeProfile)

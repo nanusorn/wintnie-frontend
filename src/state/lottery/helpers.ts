@@ -1,14 +1,14 @@
 import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber'
 import { LotteryStatus, LotteryTicket } from 'config/constants/types'
-import lotteryV2Abi from 'config/abi/lotteryV2.json'
-import { getLotteryV2Address } from 'utils/addressHelpers'
+import wintnieLotteryAbi from 'config/abi/WinTnieLottery.json'
+import { getWinTnieLotteryAddress } from 'utils/addressHelpers'
 import { multicallv2 } from 'utils/multicall'
 import { LotteryResponse } from 'state/types'
-import { getLotteryV2Contract } from 'utils/contractHelpers'
+import { getWinTnieLotteryContract } from 'utils/contractHelpers'
 import { ethersToSerializedBigNumber } from 'utils/bigNumber'
 import { NUM_ROUNDS_TO_FETCH_FROM_NODES } from 'config/constants/lottery'
 
-const lotteryContract = getLotteryV2Contract()
+const lotteryContract = getWinTnieLotteryContract()
 
 const processViewLotterySuccessResponse = (response, lotteryId: string): LotteryResponse => {
   const {
@@ -85,11 +85,11 @@ export const fetchLottery = async (lotteryId: string): Promise<LotteryResponse> 
 export const fetchMultipleLotteries = async (lotteryIds: string[]): Promise<LotteryResponse[]> => {
   const calls = lotteryIds.map((id) => ({
     name: 'viewLottery',
-    address: getLotteryV2Address(),
+    address: getWinTnieLotteryAddress(),
     params: [id],
   }))
   try {
-    const multicallRes = await multicallv2({ abi: lotteryV2Abi, calls, options: { requireSuccess: false } })
+    const multicallRes = await multicallv2({ abi: wintnieLotteryAbi, calls, options: { requireSuccess: false } })
     const processedResponses = multicallRes.map((res, index) =>
       processViewLotterySuccessResponse(res[0], lotteryIds[index]),
     )
@@ -107,11 +107,11 @@ export const fetchCurrentLotteryId = async (): Promise<EthersBigNumber> => {
 export const fetchCurrentLotteryIdAndMaxBuy = async () => {
   try {
     const calls = ['currentLotteryId', 'maxNumberTicketsPerBuyOrClaim'].map((method) => ({
-      address: getLotteryV2Address(),
+      address: getWinTnieLotteryAddress(),
       name: method,
     }))
     const [[currentLotteryId], [maxNumberTicketsPerBuyOrClaim]] = (await multicallv2({
-      abi: lotteryV2Abi,
+      abi: wintnieLotteryAbi,
       calls,
     })) as EthersBigNumber[][]
 

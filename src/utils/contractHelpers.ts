@@ -15,7 +15,7 @@ import {
   getPancakeBunniesAddress,
   getBunnyFactoryAddress,
   getBunnySpecialAddress,
-  getLotteryV2Address,
+  getWinTnieLotteryAddress,
   getMasterChefAddress,
   getMasterChefV1Address,
   getPointCenterIfoAddress,
@@ -62,7 +62,7 @@ import cakeAbi from 'config/abi/cake.json'
 import ifoV1Abi from 'config/abi/ifoV1.json'
 import ifoV2Abi from 'config/abi/ifoV2.json'
 import pointCenterIfo from 'config/abi/pointCenterIfo.json'
-import lotteryV2Abi from 'config/abi/lotteryV2.json'
+import WinTnieLotteryAbi from 'config/abi/WinTnieLottery.json'
 import masterChef from 'config/abi/masterchef.json'
 import masterChefV1 from 'config/abi/masterchefV1.json'
 import sousChef from 'config/abi/sousChef.json'
@@ -155,7 +155,7 @@ import type {
   NonBscVault,
   CrossFarmingSender,
   CrossFarmingReceiver,
-  CrossFarmingProxy,
+  CrossFarmingProxy, WinTnieLottery,
 } from 'config/abi/types'
 import { ChainId } from '@pancakeswap/sdk'
 
@@ -232,8 +232,8 @@ export const getBunnyFactoryContract = (signer?: Signer | Provider) => {
 export const getBunnySpecialContract = (signer?: Signer | Provider) => {
   return getContract({ abi: bunnySpecialAbi, address: getBunnySpecialAddress(), signer }) as BunnySpecial
 }
-export const getLotteryV2Contract = (signer?: Signer | Provider) => {
-  return getContract({ abi: lotteryV2Abi, address: getLotteryV2Address(), signer }) as LotteryV2
+export const getWinTnieLotteryContract = (signer?: Signer | Provider) => {
+  return getContract({ abi: WinTnieLotteryAbi, address: getWinTnieLotteryAddress(), signer }) as WinTnieLottery
 }
 export const getMasterchefContract = (signer?: Signer | Provider, chainId?: number) => {
   return getContract({ abi: masterChef, address: getMasterChefAddress(chainId), signer }) as Masterchef

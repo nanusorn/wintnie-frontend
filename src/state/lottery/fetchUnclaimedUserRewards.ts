@@ -3,9 +3,9 @@ import { BigNumber as EthersBigNumber } from '@ethersproject/bignumber'
 import { LotteryStatus, LotteryTicket, LotteryTicketClaimData } from 'config/constants/types'
 import { LotteryUserGraphEntity, LotteryRoundGraphEntity } from 'state/types'
 import { multicallv2 } from 'utils/multicall'
-import lotteryV2Abi from 'config/abi/lotteryV2.json'
+import wintnieLotteryAbi from 'config/abi/winTnieLottery.json'
 import { NUM_ROUNDS_TO_CHECK_FOR_REWARDS } from 'config/constants/lottery'
-import { getLotteryV2Address } from 'utils/addressHelpers'
+import { getWinTnieLotteryAddress } from 'utils/addressHelpers'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { fetchUserTicketsForMultipleRounds } from './getUserTicketsData'
 import { MAX_LOTTERIES_REQUEST_SIZE } from './getLotteriesData'
@@ -16,7 +16,7 @@ interface RoundDataAndUserTickets {
   finalNumber: string
 }
 
-const lotteryAddress = getLotteryV2Address()
+const lotteryAddress = getWinTnieLotteryAddress()
 
 const fetchCakeRewardsForTickets = async (
   winningTickets: LotteryTicket[],
@@ -31,7 +31,7 @@ const fetchCakeRewardsForTickets = async (
   })
 
   try {
-    const cakeRewards = await multicallv2({ abi: lotteryV2Abi, calls })
+    const cakeRewards = await multicallv2({ abi: wintnieLotteryAbi, calls })
 
     const cakeTotal = cakeRewards.reduce((accum: BigNumber, cakeReward: EthersBigNumber[]) => {
       return accum.plus(new BigNumber(cakeReward[0].toString()))

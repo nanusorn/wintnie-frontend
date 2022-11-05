@@ -5,3 +5,4 @@ export const FINISHED_ROUNDS_BG = 'linear-gradient(180deg, #CBD7EF 0%, #9A9FD0 1
 export const FINISHED_ROUNDS_BG_DARK = 'linear-gradient(180deg, #434575 0%, #66578D 100%)'
 export const PREDICT_BG = 'linear-gradient(180deg, #6790ed 0%, #447bf6 100%)'
 export const OMG_BG = 'linear-gradient(180deg, #e98b8d 0%, #d35742 100%)'
+export const WINTNIELOTTERY_BG = 'linear-gradient(180deg, #E0BBE4 0%, #D291BC 100%)'

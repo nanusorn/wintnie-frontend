@@ -1,29 +1,33 @@
-import {useEffect, useState} from 'react'
-import {Box, Button, CardHeader, Flex, Heading, Text} from '@pancakeswap/uikit'
-import {useTranslation} from '@pancakeswap/localization'
-import {BigNumber, ethers} from 'ethers'
-import {getFloorBiddingAddress} from '../../../utils/addressHelpers'
+import { useEffect, useState } from 'react'
+import { Box, Button, CardHeader, Flex, Heading, Text } from '@pancakeswap/uikit'
+import { useTranslation } from '@pancakeswap/localization'
+import { BigNumber, ethers } from 'ethers'
+import { getFloorBiddingAddress, getWinTnieLotteryAddress } from '../../../utils/addressHelpers'
 import winTnieLotteryAbi from '../../../config/abi/WinTnieLottery.json'
-import {useBiddingStatus} from "../../FloorBidding/hooks/useBiddingStatus"
 
 const WinTnieLotteryAdminGameCard = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation()
   // const {isContractOwner} = useGetTestOwner();
-  const [isStartingGame, setIsStartingGame] = useState(false);
-  const [isEndingGame, setIsEndingGame] = useState(false);
-  const {gameStatus} = useBiddingStatus('0');
+  const [isStartingGame, setIsStartingGame] = useState(false)
+  const [isEndingGame, setIsEndingGame] = useState(false)
 
   const gameAdminAction = async (isStartSession: boolean) => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
+    const provider = new ethers.providers.Web3Provider(window.ethereum, 'any')
     const [accounts, chainId] = await Promise.all([
       provider.send('eth_requestAccounts', []),
       provider.send('eth_chainId', []),
-    ]);
+    ])
     const signer = provider.getSigner()
-    const contract = new ethers.Contract(getFloorBiddingAddress(Number(chainId)), winTnieLotteryAbi, signer);
+    console.log(signer.getAddress())
+    const contract = new ethers.Contract(getWinTnieLotteryAddress(Number(chainId)), winTnieLotteryAbi, signer)
     try {
       if (isStartSession) {
-        await contract.st
+        console.log('-----------')
+        const owner = await contract.owner()
+        console.log('-----------')
+        console.log(owner)
+        console.log('-----------')
+        // await contract.st
         // result = await contract.startLottery(
         //   endTime,
         //   _priceTicketInCake,
@@ -78,4 +82,4 @@ const WinTnieLotteryAdminGameCard = () => {
   )
 }
 
-export default WinTnieLotteryAdminGameCard;
+export default WinTnieLotteryAdminGameCard

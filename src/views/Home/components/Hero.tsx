@@ -1,11 +1,10 @@
-import { Button, Flex, Heading } from '@pancakeswap/uikit'
-import { useWeb3React } from '@pancakeswap/wagmi'
-import ConnectWalletButton from 'components/ConnectWalletButton'
-import { NextLinkFromReactRouter } from 'components/NextLink'
+import { Flex, Heading } from '@pancakeswap/uikit'
+// import ConnectWalletButton from 'components/ConnectWalletButton'
 import { useTranslation } from '@pancakeswap/localization'
+import useTheme from 'hooks/useTheme'
 import Image from 'next/image'
 import styled, { keyframes } from 'styled-components'
-import bunnyImage from '../../../../public/images/home/lunar-bunny/astronaut-bunny.png'
+import honeyJarImage from '../../../../public/images/home/bear/honey@2x.png'
 import CompositeImage, { CompositeImageProps } from './CompositeImage'
 import { SlideSvgDark, SlideSvgLight } from './SlideSvg'
 
@@ -14,7 +13,7 @@ const flyingAnim = () => keyframes`
     transform: translate(0,  0px);
   }
   50% {
-    transform: translate(-5px, -5px);
+    transform: translate(-15px, 0px);
   }
   to {
     transform: translate(0, 0px);
@@ -49,94 +48,77 @@ const InnerWrapper = styled.div`
   bottom: -3px;
 `
 
-const BunnyWrapper = styled.div`
+const JarWrapper = styled.div`
   width: 100%;
-  animation: ${flyingAnim} 3.5s ease-in-out infinite;
+  animation: ${flyingAnim} 5.5s ease-in-out infinite;
   will-change: transform;
   > span {
     overflow: visible !important; // make sure the next-image pre-build blur image not be cropped
   }
 `
 
-const StarsWrapper = styled.div`
+const CoinsWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
 
   & :nth-child(2) {
-    animation: ${fading} 2s ease-in-out infinite;
+    animation: ${fading} 5s ease-in-out infinite;
     animation-delay: 1s;
   }
 
   & :nth-child(3) {
-    animation: ${fading} 5s ease-in-out infinite;
+    animation: ${fading} 3s ease-in-out infinite;
     animation-delay: 0.66s;
   }
 
   & :nth-child(4) {
-    animation: ${fading} 2.5s ease-in-out infinite;
+    animation: ${fading} 1.5s ease-in-out infinite;
     animation-delay: 0.33s;
   }
 `
 
-const starsImage: CompositeImageProps = {
-  path: '/images/home/lunar-bunny/',
+const coinsImage: CompositeImageProps = {
+  path: '/images/home/bear/',
   attributes: [
-    { src: 'star-l', alt: '3D Star' },
-    { src: 'star-r', alt: '3D Star' },
-    { src: 'star-top-r', alt: '3D Star' },
+    { src: 'coin-l', alt: '3D Coin' },
+    { src: 'coin-r', alt: '3D Coin' },
+    { src: 'coin-top-r', alt: '3D Coin' },
   ],
 }
 
 const Hero = () => {
   const { t } = useTranslation()
-  const { account } = useWeb3React()
+  const { theme } = useTheme()
 
   return (
     <>
-      <style jsx global>
-        {`
-          .slide-svg-dark {
-            display: none;
-          }
-          .slide-svg-light {
-            display: block;
-          }
-          [data-theme='dark'] .slide-svg-dark {
-            display: block;
-          }
-          [data-theme='dark'] .slide-svg-light {
-            display: none;
-          }
-        `}
-      </style>
       <BgWrapper>
-        <InnerWrapper>
-          <SlideSvgDark className="slide-svg-dark" width="100%" />
-          <SlideSvgLight className="slide-svg-light" width="100%" />
-        </InnerWrapper>
+        <InnerWrapper>{theme.isDark ? <SlideSvgDark width="100%" /> : <SlideSvgLight width="100%" />}</InnerWrapper>
       </BgWrapper>
       <Flex
         position="relative"
         flexDirection={['column-reverse', null, null, 'row']}
         alignItems={['flex-end', null, null, 'center']}
         justifyContent="center"
-        mt={[account ? '280px' : '50px', null, 0]}
+        mt={['0px', null, 0]}
         id="homepage-hero"
       >
         <Flex flex="1" flexDirection="column">
           <Heading scale="xxl" color="secondary" mb="24px">
-            {t('The moon is made of pancakes.')}
+            {t('This is an opportunity that only comes once in a lifetime.')}
           </Heading>
           <Heading scale="md" mb="24px">
-            {t('Trade, earn, and win crypto on the most popular decentralized platform in the galaxy.')}
+            {t(
+              'What are you waiting for? Take it, Grab it and Hop onto the Bandwagon to earn some Real Stash on the Most Profitable Crypto Game now!',
+            )}
           </Heading>
-          <Flex>
-            {!account && <ConnectWalletButton mr="8px" />}
-            <NextLinkFromReactRouter to="/swap">
-              <Button variant={!account ? 'secondary' : 'primary'}>{t('Trade Now')}</Button>
-            </NextLinkFromReactRouter>
-          </Flex>
+          {/* <Flex> */}
+          {/* {!account && <ConnectWalletButton mr="8px" />} */}
+          {/* /!*<NextLinkFromReactRouter to="/swap">*!/ */}
+          {/* /!*  <Button variant={!account ? 'secondary' : 'primary'}>{t('Trade Now')}</Button>*!/ */}
+          {/* /!*</NextLinkFromReactRouter>*!/ */}
+          {/* </Flex> */}
         </Flex>
         <Flex
           height={['192px', null, null, '100%']}
@@ -145,12 +127,12 @@ const Hero = () => {
           mb={['24px', null, null, '0']}
           position="relative"
         >
-          <BunnyWrapper>
-            <Image src={bunnyImage} priority placeholder="blur" alt={t('Lunar bunny')} />
-          </BunnyWrapper>
-          <StarsWrapper>
-            <CompositeImage {...starsImage} />
-          </StarsWrapper>
+          <JarWrapper>
+            <Image src={honeyJarImage} priority placeholder="blur" alt={t('Lunar bunny')} />
+          </JarWrapper>
+          <CoinsWrapper>
+            <CompositeImage {...coinsImage} />
+          </CoinsWrapper>
         </Flex>
       </Flex>
     </>
